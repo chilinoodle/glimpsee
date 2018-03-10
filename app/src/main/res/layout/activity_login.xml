@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    tools:context=".LoginActivity">
+
+
+    <ImageView
+        android:contentDescription="title image"
+        android:id="@+id/main_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:padding="16dp"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/eye_green"/>
+
+    <EditText
+        android:id="@+id/name_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_image"
+        android:layout_margin="16dp"
+        android:hint="@string/name_hint"
+        android:inputType="textCapWords"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"/>
+
+    <TextView
+        android:id="@+id/name_fixed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_image"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="#000"
+        android:textSize="18sp"
+        tools:visibility="invisible"
+        tools:text="Welcome Mazen!"/>
+
+    <Spinner
+
+        android:id="@+id/city_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_field"
+        android:layout_margin="16dp"
+        android:background="@drawable/spinner_bg"
+        tools:text="Damascus">
+
+    </Spinner>
+
+    <TextView
+        android:id="@+id/selected_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_fixed"
+        android:gravity="center"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        tools:visibility="invisible"
+        tools:text="You set your home city to Damascus"/>
+
+    <TextView
+        android:id="@+id/change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selected_city"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/change"
+        tools:visibility="invisible"/>
+
+
+    <Button
+        android:id="@+id/save_and_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/custom_button"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:text="@string/button_save"
+        android:textColor="#FFF"/>
+
+</RelativeLayout>
