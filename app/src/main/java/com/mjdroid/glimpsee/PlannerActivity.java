@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.mjdroid.glimpsee.MainActivity;
-import com.mjdroid.glimpsee.PlanActivity;
-import com.mjdroid.glimpsee.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -36,7 +32,6 @@ public class PlannerActivity extends AppCompatActivity {
     public Spinner spinner;
     public TextView fromHour;
     public TextView toHour;
-    public TextView clickedTimeView;
     public TextView withName;
     public TextView withNumber;
     public TextView withWith;
@@ -44,8 +39,8 @@ public class PlannerActivity extends AppCompatActivity {
     public Button savePlanButton;
     public ImageView activityImage;
     private static final int RESULT_PICK_CONTACT = 666;
-    public PlanActivity selectedActivityObj = new PlanActivity("", R.drawable.eye_green,"",false,"");
 
+    public PlanActivity selectedActivityObj = new PlanActivity("","","","","","");
 
     //TODO delete HASHMAP and all .put() if sending an instance of PlanActivity worked
     @Override
@@ -64,6 +59,8 @@ public class PlannerActivity extends AppCompatActivity {
         activityImage = (ImageView) findViewById(R.id.main_image);
         clearButton = (ImageView) findViewById(R.id.clear_button);
         clearButton.setVisibility(View.GONE);
+
+
 
 
 
@@ -114,23 +111,21 @@ public class PlannerActivity extends AppCompatActivity {
         dateChooser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(PlannerActivity.this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(PlannerActivity.this, dateListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         fromHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickedTimeView = (TextView) v;
-                new TimePickerDialog(PlannerActivity.this, time, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),true).show();
+                new TimePickerDialog(PlannerActivity.this, fromTimeListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),true).show();
             }
         });
 
         toHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickedTimeView = (TextView) v;
-                new TimePickerDialog(PlannerActivity.this, time, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),true).show();
+                new TimePickerDialog(PlannerActivity.this, toTimeListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),true).show();
             }
         });
 
@@ -146,15 +141,14 @@ public class PlannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent sendToMainIntent = new Intent(PlannerActivity.this,MainActivity.class);
-                sendToMainIntent.putExtra("selectedActivityObj",selectedActivityObj);
-                startActivity(sendToMainIntent);
+                sendToMainIntent.putExtra("selectedActivityObj", selectedActivityObj);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(PlannerActivity.this, (View) spinner, "activity");
+                startActivity(sendToMainIntent, options.toBundle());
             }
         });
     }
 
     public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
-        private int imageInt;
 
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
@@ -162,51 +156,7 @@ public class PlannerActivity extends AppCompatActivity {
                 String selectedActivity = (String) parent.getItemAtPosition(pos);
                 Toast.makeText(parent.getContext(), "You've selected to " + selectedActivity, Toast.LENGTH_SHORT).show();
                 selectedActivityObj.setLongText(selectedActivity);
-                switch (selectedActivity) {
-                    case "Take a walk":
-                        imageInt = R.drawable.ic_directions_walk_black_48dp;
-                        activityImage.setImageResource(imageInt);
-                        selectedActivityObj.setImageResource(imageInt);
-                        break;
-                    case "Go for a run":
-                        imageInt = R.drawable.ic_directions_run_black_48dp;
-                        break;
-                    case "Go take a hike":
-                        imageInt = R.drawable.ic_directions_walk_black_48dp;
-                        break;
-                    case "Learn coding":
-                        imageInt = R.drawable.ic_code_black_48dp;
-                        break;
-                    case "Watch TV":
-                        imageInt = R.drawable.ic_tv_black_48dp;
-                        break;
-                    case "Go to cinema":
-                        imageInt = R.drawable.ic_local_movies_black_48dp;
-                        break;
-                    case "Go shopping":
-                        imageInt = R.drawable.ic_local_grocery_store_black_48dp;
-                        break;
-                    case "Go to lunch":
-                        imageInt = R.drawable.ic_local_dining_black_48dp;
-                        break;
-                    case "Go to dinner":
-                        imageInt = R.drawable.ic_local_dining_black_48dp;
-                        break;
-                    case "Read a book":
-                        imageInt = R.drawable.ic_local_library_black_48dp;
-                        break;
-                    case "Visit someone":
-                        imageInt = R.drawable.ic_person_pin_black_48dp;
-                        break;
-                    case "Do absolutely nothing":
-                        imageInt = R.drawable.ic_weekend_black_48dp;
-                        break;
-                    default:
-                        imageInt = R.drawable.eye_green;
-                }
-
-                selectedActivityObj.setImageResource(imageInt);
-                activityImage.setImageResource(imageInt);
+                activityImage.setImageResource(selectedActivityObj.findImageResource());
 
             }
         }
@@ -218,7 +168,7 @@ public class PlannerActivity extends AppCompatActivity {
 
     Calendar calendar = Calendar.getInstance();
 
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+    DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             calendar.set(Calendar.YEAR,year);
@@ -228,12 +178,21 @@ public class PlannerActivity extends AppCompatActivity {
         }
     };
 
-    TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
+    TimePickerDialog.OnTimeSetListener fromTimeListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
             calendar.set(Calendar.MINUTE, minute);
-            updateTimeView(clickedTimeView);
+            updateFromTimeView(fromHour);
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener toTimeListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            updateToTimeView(toHour);
         }
     };
 
@@ -246,10 +205,18 @@ public class PlannerActivity extends AppCompatActivity {
         selectedActivityObj.setDate(sdf.format(calendar.getTime()));
     }
 
-    private void updateTimeView(TextView textView) {
+    private void updateFromTimeView(TextView textView) {
         String dateFormat = "HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         textView.setText(sdf.format(calendar.getTime()));
+        selectedActivityObj.setFromTime(sdf.format(calendar.getTime()));
+    }
+
+    private void updateToTimeView(TextView textView) {
+        String dateFormat = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        textView.setText(sdf.format(calendar.getTime()));
+        selectedActivityObj.setToTime(sdf.format(calendar.getTime()));
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -287,7 +254,6 @@ public class PlannerActivity extends AppCompatActivity {
             withName.setText(name);
             withNumber.setText(phoneNo);
             clearButton.setVisibility(View.VISIBLE);
-            selectedActivityObj.setHasCompany(true);
             selectedActivityObj.setContact(name);
 
             clearButton.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +262,6 @@ public class PlannerActivity extends AppCompatActivity {
                     withName.setText("");
                     withNumber.setText("");
                     clearButton.setVisibility(View.GONE);
-                    selectedActivityObj.setHasCompany(false);
                 }
             });
 

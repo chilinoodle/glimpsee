@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mjdroid.glimpsee.ActivityAdapter;
-import com.mjdroid.glimpsee.R;
 
 import java.util.ArrayList;
 

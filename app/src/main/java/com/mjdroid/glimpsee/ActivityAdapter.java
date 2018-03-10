@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.mjdroid.glimpsee.R;
-
 import java.util.ArrayList;
 
 public class ActivityAdapter extends ArrayAdapter <PlanActivity> {
@@ -29,8 +26,10 @@ public class ActivityAdapter extends ArrayAdapter <PlanActivity> {
 
         PlanActivity selectedActivity = getItem(position);
 
+
         ImageView activityIcon = (ImageView) listItemView.findViewById(R.id.activity_icon);
-        activityIcon.setImageResource(selectedActivity.getImageResource());
+        //findImageResource defined in PlanActivity class (switch case)
+        activityIcon.setImageResource(selectedActivity.findImageResource());
 
         TextView activityName = (TextView) listItemView.findViewById(R.id.activity_name);
         activityName.setText(selectedActivity.getLongText());
@@ -40,6 +39,9 @@ public class ActivityAdapter extends ArrayAdapter <PlanActivity> {
 
         TextView activityDate = (TextView) listItemView.findViewById(R.id.date);
         activityDate.setText(selectedActivity.getDate());
+
+        TextView activityFrom = (TextView) listItemView.findViewById(R.id.time);
+        activityFrom.setText(selectedActivity.getFromTime());
 
         return listItemView;
     }
